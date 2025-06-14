@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Curso</title>
+</head>
+<body>
+    <h1>Cursos</h1>
+
+    <form id="form-busca" method="get" action="http://localhost:8080/gestor_escolar/curso">
+        <input type="text" name="q" id="q" placeholder="Buscar por nome">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Categoria</th>
+                <th>Excluir</th>
+                <th>Alterar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os cursos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById("form-busca").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const termo = document.getElementById("q").value;
+            buscarCursos(termo);
+        });
+
+        async function buscarCursos(termo) {
+            const response = await fetch(`http://localhost:8080/gestor_escolar/curso?q=${encodeURIComponent(termo)}`);
+            
+            if (!response.ok) {
+                alert("Erro ao buscar cursos.");
+                return;
+            }
+
+            const cursos = await response.json();
+            const tbody = document.querySelector("#tabela tbody");
+            tbody.innerHTML = "";
+
+            cursos.forEach(curso => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${curso.id}</td>
+                    <td>${curso.nome}</td>
+                    <td>${curso.valor}</td>
+                    <td>${curso.curso.nome}</td>
+                    <td><button onclick="excluirCurso(${curso.id})">Excluir</button></td>
+                    <td><button onclick="editarCurso(${curso.id})">Editar</button></td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function excluirCurso(id) {
+            if (!confirm("Tem certeza que deseja excluir o curso " + id + "?")) return;
+
+            const response = await fetch(`http://localhost:8080/gestor_escolar/curso/${id}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                alert("Curso excluído com sucesso!");
+                document.getElementById("form-busca").dispatchEvent(new Event("submit"));
+            } else {
+                alert("Erro ao excluir curso.");
+            }
+        }
+
+        function editarCurso(id) {
+            window.location.href = `/gestor_escolar/Curso/frm/frmCursoEditar.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

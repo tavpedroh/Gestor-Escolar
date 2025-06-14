@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista ALuno</title>
+</head>
+<body>
+    <h1>Alunos</h1>
+
+    <form id="form-busca" method="get" action="http://localhost:8080/gestor_escolar/aluno">
+        <input type="text" name="q" id="q" placeholder="Buscar por nome">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Categoria</th>
+                <th>Excluir</th>
+                <th>Alterar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os alunos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById("form-busca").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const termo = document.getElementById("q").value;
+            buscarAlunos(termo);
+        });
+
+        async function buscarAlunos(termo) {
+            const response = await fetch(`http://localhost:8080/gestor_escolar/aluno?q=${encodeURIComponent(termo)}`);
+            
+            if (!response.ok) {
+                alert("Erro ao buscar alunos.");
+                return;
+            }
+
+            const alunos = await response.json();
+            const tbody = document.querySelector("#tabela tbody");
+            tbody.innerHTML = "";
+
+            alunos.forEach(aluno => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${aluno.id}</td>
+                    <td>${aluno.nome}</td>
+                    <td>${aluno.valor}</td>
+                    <td>${aluno.curso.nome}</td>
+                    <td><button onclick="excluirAluno(${aluno.id})">Excluir</button></td>
+                    <td><button onclick="editarAluno(${aluno.id})">Editar</button></td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function excluirAluno(id) {
+            if (!confirm("Tem certeza que deseja excluir o aluno " + id + "?")) return;
+
+            const response = await fetch(`http://localhost:8080/gestor_escolar/aluno/${id}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                alert("Aluno excluído com sucesso!");
+                document.getElementById("form-busca").dispatchEvent(new Event("submit"));
+            } else {
+                alert("Erro ao excluir aluno.");
+            }
+        }
+
+        function editarAluno(id) {
+            window.location.href = `/gestor_escolar/Aluno/frm/frmAlunoEditar.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

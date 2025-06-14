@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Curso</title>
+</head>
+<body>
+    <h1>Gestor Escolar - Editar Curso</h1>
+
+    <form id="form-editar">
+        <input type="hidden" id="id" name="id">
+
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="duracao_semetres">Duracao Semetres:</label><br>
+        <input type="number" id="duracao_semetres" name="duracao_semetres" required><br><br>
+
+        <!-- <label for="idCategoria">Categoria:</label><br>
+        <select id="idCategoria" name="idCategoria" required>
+            <option value="">Selecione uma categoria</option>
+        </select><br><br> -->
+
+        <button type="submit">Atualizar</button>
+    </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        // Submeter o formulário com PUT
+        document.getElementById("form-editar").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const curso = {
+                id: parseInt(document.getElementById("id").value),
+                nome: document.getElementById("nome").value,
+                duracao_semetres: document.getElementById("duracao_semetres").value
+            };
+
+            const response = await fetch(`http://localhost:8080/gestor_escolar/curso/${curso.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(curso)
+            });
+
+            if (response.ok) {
+                alert("Curso atualizado com sucesso!");
+                window.location.href = "/gestor_escolar/Curso/frm/frmCursoListar.html";
+            } else {
+                alert("Erro ao atualizar curso.");
+            }
+        });
+    </script>
+</body>
+</html>

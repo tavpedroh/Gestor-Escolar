@@ -1,0 +1,26 @@
+CREATE DATABASE IF NOT EXISTS dbgestorescolar;
+
+USE dbgestorescolar;
+
+CREATE TABLE Curso(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    duracao_semetres INT
+);
+
+CREATE TABLE Aluno(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    data_ingresso DATE,
+    curso_id INT,
+    FOREIGN KEY (curso_id) REFERENCES Curso(id)
+);
+
+
+CREATE TABLE Disciplina(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL,
+    carga_horaria INT,
+    curso_id INT,
+    FOREIGN KEY (curso_id) REFERENCES Curso(id)
+);

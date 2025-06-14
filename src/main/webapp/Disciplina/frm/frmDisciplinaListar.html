@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Disciplina</title>
+</head>
+<body>
+    <h1>Disciplinas</h1>
+
+    <form id="form-busca" method="get" action="http://localhost:8080/gestor_escolar/disciplina">
+        <input type="text" name="q" id="q" placeholder="Buscar por nome">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table id="tabela">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Carga Horaria</th>
+                <th>Curso</th>
+                <th>Excluir</th>
+                <th>Alterar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os alunos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById("form-busca").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const termo = document.getElementById("q").value;
+            buscarDisciplinas(termo);
+        });
+
+        async function buscarDisciplinas(termo) {
+            const response = await fetch(`http://localhost:8080/gestor_escolar/disciplina?q=${encodeURIComponent(termo)}`);
+            
+            if (!response.ok) {
+                alert("Erro ao buscar disciplinas.");
+                return;
+            }
+
+            const disciplinas = await response.json();
+            const tbody = document.querySelector("#tabela tbody");
+            tbody.innerHTML = "";
+
+            disciplinas.forEach(disciplina => {
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${disciplina.id}</td>
+                    <td>${disciplina.nome}</td>
+                    <td>${disciplina.carga_horaria}</td>
+                    <td>${disciplina.curso.nome}</td>
+                    <td><button onclick="excluirDisciplina(${disciplina.id})">Excluir</button></td>
+                    <td><button onclick="editarDisciplina(${disciplina.id})">Editar</button></td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function excluirDisciplina(id) {
+            if (!confirm("Tem certeza que deseja excluir a disciplina " + id + "?")) return;
+
+            const response = await fetch(`http://localhost:8080/gestor_escolar/disciplina/${id}`, {
+                method: "DELETE"
+            });
+
+            if (response.ok) {
+                alert("Disciplina excluída com sucesso!");
+                document.getElementById("form-busca").dispatchEvent(new Event("submit"));
+            } else {
+                alert("Erro ao excluir disciplina.");
+            }
+        }
+
+        function editarDisciplina(id) {
+            window.location.href = `/gestor_escolar/Disciplina/frm/frmDisciplinaEditar.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

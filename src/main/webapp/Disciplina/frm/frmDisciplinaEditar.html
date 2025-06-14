@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Disciplina</title>
+</head>
+<body>
+    <h1>Editar Disciplina</h1>
+
+    <form id="form-editar">
+        <input type="hidden" id="id" name="id">
+
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" required><br><br>
+
+        <label for="carga_horaria">Carga:</label><br>
+        <input type="number" id="carga_horaria" name="carga_horaria" required><br><br>
+
+        <label for="idCurso">Curso:</label><br>
+        <select id="idCurso" name="idCurso" required>
+            <option value="">Selecione um curso</option>
+        </select><br><br>
+
+        <button type="submit">Atualizar</button>
+    </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        // Carregar cursos no select
+        fetch("http://localhost:8080/gestor_escolar/curso")
+            .then(res => res.json())
+            .then(cursos => {
+                const select = document.getElementById("idCurso");
+                cursos.forEach(cur => {
+                    const option = document.createElement("option");
+                    option.value = cur.id;
+                    option.textContent = cur.nome;
+                    select.appendChild(option);
+                });
+
+                // Só buscar o aluno depois que as categorias forem carregadas
+                if (id) {
+                    fetch(`http://localhost:8080/gestor_escolar/disciplina/${id}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error("Aluno não encontrado.");
+                            return res.json();
+                        })
+                        .then(disciplina => {
+                            document.getElementById("id").value = disciplina.id;
+                            document.getElementById("nome").value = disciplina.nome;
+                            document.getElementById("carga_horaria").value = disciplina.carga_horaria;
+                            document.getElementById("idCurso").value = disciplina.curso.id;
+                        })
+                        .catch(err => alert("Erro ao carregar disciplina: " + err.message));
+                } else {
+                    alert("ID da disciplina não informado na URL.");
+                }
+            })
+            .catch(err => alert("Erro ao carregar cursos: " + err.message));
+
+        // Submeter o formulário com PUT
+        document.getElementById("form-editar").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const disciplina = {
+                id: parseInt(document.getElementById("id").value),
+                nome: document.getElementById("nome").value,
+                carga_horaria: parseFloat(document.getElementById("carga_horaria").value),
+                curso: {
+                    id: parseInt(document.getElementById("idCurso").value)
+                }
+            };
+
+            const response = await fetch(`http://localhost:8080/gestor_escolar/disciplina/${disciplina.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(disciplina)
+            });
+
+            if (response.ok) {
+                alert("Disciplina atualizado com sucesso!");
+                window.location.href = "/gestor_escolar/Disciplina/frm/frmDisciplinaListar.html";
+            } else {
+                alert("Erro ao atualizar disciplina.");
+            }
+        });
+    </script>
+</body>
+</html>
