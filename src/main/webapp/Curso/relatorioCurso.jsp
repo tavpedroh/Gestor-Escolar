@@ -62,7 +62,7 @@
         </c:forEach>
     </table>
     <p>
-        <a href="/gestor_escolar/Menu/menu.jsp">Voltar para o menu.</a>
+        <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
     </p>
 </body>
 

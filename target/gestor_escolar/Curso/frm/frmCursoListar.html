@@ -1,87 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista Curso</title>
+    <title>Listar Cursos - JSON</title>
 </head>
 <body>
-    <h1>Cursos</h1>
-
-    <form id="form-busca" method="get" action="http://localhost:8080/gestor_escolar/curso">
-        <input type="text" name="q" id="q" placeholder="Buscar por nome">
-        <button type="submit">Buscar</button>
+    <form class="menu" id="cursoForm" onsubmit="return false;">
+        <label for="nomeCurso">Nome do curso:</label>
+        <input type="text" id="nomeCurso" placeholder="Digite o nome do curso">
+        <button type="submit" id="listarJsonBtn">Listar JSON</button>
     </form>
+    <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
 
-    <table id="tabela">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Valor</th>
-                <th>Categoria</th>
-                <th>Excluir</th>
-                <th>Alterar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Os cursos serão inseridos aqui -->
-        </tbody>
-    </table>
+    <div id="resultado" class="json-output"></div>
 
     <script>
-        document.getElementById("form-busca").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const termo = document.getElementById("q").value;
-            buscarCursos(termo);
-        });
+        document.getElementById('listarJsonBtn').addEventListener('click', function() {
+            const filtro = document.getElementById('filtro').value;
+            const nomeCurso = document.getElementById('nomeCurso').value.trim();
 
-        async function buscarCursos(termo) {
-            const response = await fetch(`http://localhost:8080/gestor_escolar/curso?q=${encodeURIComponent(termo)}`);
-            
-            if (!response.ok) {
-                alert("Erro ao buscar cursos.");
+            if (!filtro && !nomeCurso) {
+                document.getElementById('resultado').textContent = 'Selecione um filtro ou digite um nome.';
                 return;
             }
 
-            const cursos = await response.json();
-            const tbody = document.querySelector("#tabela tbody");
-            tbody.innerHTML = "";
+            const params = new URLSearchParams();
+            if (filtro) params.append('status', filtro);
+            if (nomeCurso) params.append('nome', nomeCurso);
 
-            cursos.forEach(curso => {
-                const tr = document.createElement("tr");
-
-                tr.innerHTML = `
-                    <td>${curso.id}</td>
-                    <td>${curso.nome}</td>
-                    <td>${curso.valor}</td>
-                    <td>${curso.curso.nome}</td>
-                    <td><button onclick="excluirCurso(${curso.id})">Excluir</button></td>
-                    <td><button onclick="editarCurso(${curso.id})">Editar</button></td>
-                `;
-
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function excluirCurso(id) {
-            if (!confirm("Tem certeza que deseja excluir o curso " + id + "?")) return;
-
-            const response = await fetch(`http://localhost:8080/gestor_escolar/curso/${id}`, {
-                method: "DELETE"
-            });
-
-            if (response.ok) {
-                alert("Curso excluído com sucesso!");
-                document.getElementById("form-busca").dispatchEvent(new Event("submit"));
-            } else {
-                alert("Erro ao excluir curso.");
-            }
-        }
-
-        function editarCurso(id) {
-            window.location.href = `/gestor_escolar/Curso/frm/frmCursoEditar.html?id=${id}`;
-        }
+            fetch(`/api/cursos?${params.toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('resultado').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('resultado').textContent = 'Erro ao buscar dados.';
+                });
+        });
     </script>
 </body>
 </html>

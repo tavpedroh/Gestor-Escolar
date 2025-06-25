@@ -7,7 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatorio Aluno</title>
-    <link rel="stylesheet" href="./aluno.css">
+    
+
 </head>
 <body>
     <h1>Gestor Escolar - Relatório de Alunos</h1>
@@ -79,7 +80,7 @@
     </table>
     
     <p>
-        <a href="/gestor_escolar/Menu/menu.jsp">Voltar para o menu.</a>
+        <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
     </p>
 
 </body>
