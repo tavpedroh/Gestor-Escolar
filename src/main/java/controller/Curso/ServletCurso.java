@@ -51,7 +51,7 @@ public class ServletCurso extends HttpServlet {
 		List<Curso> cursos = null;
 
 		try {
-			cursos = curDao.listarUm(query);
+			cursos = curDao.listar(query);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -65,11 +65,11 @@ public class ServletCurso extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String nome = request.getParameter("nome");
-		int duracao_semetres = Integer.parseInt(request.getParameter("duracao_semetres"));
+		int duracao_semestres = Integer.parseInt(request.getParameter("duracao_semetres"));
 
 		Curso curso = new Curso();
 		curso.setNome(nome);
-		curso.setDuracaoSemetre(duracao_semetres);
+		curso.setDuracaoSemestres(duracao_semestres);
 
 		CursoDao curDao = new CursoDao();
 
@@ -94,33 +94,6 @@ public class ServletCurso extends HttpServlet {
 				response.sendRedirect(next);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do curso não fornecido.");
-		}
-	}
-	@Override
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idStr = request.getParameter("id");
-		String next = request.getParameter("next");
-        if (idStr != null && !idStr.isEmpty()) {
-            int id = Integer.parseInt(idStr);
-			String nome = request.getParameter("nome");
-			int duracao_semetres = Integer.parseInt(request.getParameter("duracao_semetres"));
-
-			CursoDao curDao = new CursoDao();
-			Curso curso = new Curso();
-
-			curso.setId(id);
-			curso.setNome(nome);
-			curso.setDuracaoSemetre(duracao_semetres);
-
-			try {
-					curDao.alterar(curso);
-					response.sendRedirect(next);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao atualizar curso.");
 			}
 		} else {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do curso não fornecido.");

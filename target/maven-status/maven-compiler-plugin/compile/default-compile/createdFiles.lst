@@ -2,13 +2,13 @@ dao\CursoDao.class
 controller\Usuario\ServletUsuario.class
 model\Aluno\Aluno.class
 model\Usuario\Usuario.class
-controller\Curso\frm\CursoServlet.class
 model\Disciplina\RelatorioDisciplinaDTO.class
 controller\Disciplina\ServletDisciplina.class
 dao\ConnectionFactory.class
 controller\Aluno\ServletRelatorioAluno.class
 controller\Curso\ServletRelatorioCurso.class
 model\Aluno\RelatorioAlunoDTO.class
+controller\Curso\Json\CursoServlet.class
 model\Curso\RelatorioCursoDTO.class
 dao\AlunoDao.class
 dao\UsuarioDao.class

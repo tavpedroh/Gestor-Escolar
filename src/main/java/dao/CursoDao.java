@@ -19,12 +19,12 @@ public class CursoDao {
 
     public void inserir(Curso curso) throws SQLException {
 
-		String sql = " insert into Curso(nome, duracao_semetres) values(?,?) ";
+		String sql = " insert into Curso(nome, duracao_semestres) values(?,?) ";
 
 		PreparedStatement stmt = con.prepareStatement(sql);
 
 		stmt.setString(1,curso.getNome());
-		stmt.setInt(2,curso.getDuracaoSemetre());
+		stmt.setInt(2,curso.getDuracaoSemestres());
 
 		stmt.execute();
 		stmt.close();
@@ -34,12 +34,12 @@ public class CursoDao {
 
 	public void alterar(Curso curso) throws SQLException {
 
-		String sql = " update Curso set nome = ?, duracao_semetres = ? where id = ? ";
+		String sql = " update Curso set nome = ?, duracao_semestres = ? where id = ? ";
 
 		PreparedStatement stmt = con.prepareStatement(sql);
 
 		stmt.setString(1, curso.getNome());
-		stmt.setInt(2, curso.getDuracaoSemetre());
+		stmt.setInt(2, curso.getDuracaoSemestres());
 		stmt.setInt(3, curso.getId());
 
 		stmt.execute();
@@ -62,12 +62,12 @@ public class CursoDao {
 	}
 
 
-	public List<Curso> listarUm(String query) throws SQLException {
-		String sql = " select id, nome, duracao_semetres from Curso ";
+	public List<Curso> listar(String query) throws SQLException {
+		StringBuilder sql = new StringBuilder(" select id, nome, duracao_semestres from Curso where 1=1 ");
 		if (query != null && !query.isEmpty()) {
-			sql += " where nome like ? ";
+			sql.append(" AND nome like ? ");
 		}
-		PreparedStatement stmt = con.prepareStatement(sql);
+		PreparedStatement stmt = con.prepareStatement(sql.toString());
 		
 		if (query != null && !query.isEmpty()) {
 			stmt.setString(1, "%" + query + "%");
@@ -76,13 +76,12 @@ public class CursoDao {
 		ResultSet rs = stmt.executeQuery();
 		
 		List<Curso> cursos = new ArrayList<Curso>();
-		Curso curso = null;
 		
 		while (rs.next()) {
-			curso = new Curso();
+			Curso curso = new Curso();
 			curso.setId(rs.getInt("id"));
 			curso.setNome(rs.getString("nome"));
-			curso.setDuracaoSemetre(rs.getInt("duracao_semetres"));
+			curso.setDuracaoSemestres(rs.getInt("duracao_semestres"));
 			cursos.add(curso);
 		}
 		
@@ -93,16 +92,21 @@ public class CursoDao {
 	}
 
 	public Curso listar(int id) throws SQLException {
-		String sql = " select id, nome, duracao_semetres from Curso where id = ? ";
+		String sql = " select id, nome, duracao_semestres from Curso where id = ? ";
+
 		PreparedStatement stmt = con.prepareStatement(sql);
+
 		stmt.setInt(1, id);
+
 		ResultSet rs = stmt.executeQuery();
+
 		Curso curso = null;
+
 		if (rs.next()) {
 			curso = new Curso();
 			curso.setId(rs.getInt("id"));
 			curso.setNome(rs.getString("nome"));
-			curso.setDuracaoSemetre(rs.getInt("duracao_semetres"));
+			curso.setDuracaoSemestres(rs.getInt("duracao_semestres"));
 		}
 		stmt.close();
 		con.close();
@@ -120,7 +124,7 @@ public class CursoDao {
 			curso = new Curso();
 			curso.setId(rs.getInt("id"));
 			curso.setNome(rs.getString("nome"));
-			//curso.setDuracaoSemetre(rs.getInt("duracao_semetre"));
+			//curso.setDuracaoSemestres(rs.getInt("duracao_semestres"));
 			cursos.add(curso);
 		}
 		stmt.close();

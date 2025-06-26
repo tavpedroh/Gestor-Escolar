@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Listar Cursos - JSON</title>
+</head>
+<body>
+    <h1>Gestor Escolar - Listar Curso</h1><br><br>
+    <form id="filtroForm">
+        Nome: <input type="text" id="filtroNome" placeholder="Digite o nome do curso"><br>
+        <button type="submit">Buscar</button>
+    </form><br><br>
+
+    <table border="1" id="tabelaCursos">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Duração</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table><br><br>
+    
+    <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
+
+    <script>
+        document.getElementById("filtroForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById("filtroNome").value;
+            const url = nome ? `/gestor_escolar/cursos-json?q=${encodeURIComponent(nome)}` : "/gestor_escolar/cursos-json";
+
+            const resposta = await fetch(url);
+            const cursos = await resposta.json();
+
+            const tbody = document.querySelector("#tabelaCursos tbody");
+            tbody.innerHTML = "";
+
+            cursos.forEach(curso => {
+                const row = `<tr>
+                    <td>${curso.id}</td>
+                    <td>${curso.nome}</td>
+                    <td>${curso.duracaoSemestres}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        });
+    </script>
+</body>
+</html>

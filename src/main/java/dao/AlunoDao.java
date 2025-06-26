@@ -153,28 +153,85 @@ public class AlunoDao {
 	}
 
     public List<Aluno> listarTodos() throws SQLException{
-		String sql = " select id, nome, data_ingresso, curso_id from Aluno ";
+		String sql = " select a.id as aluno_id,\n" + //
+						"    a.nome as aluno_nome,\n" + //
+						"    a.data_ingresso,\n" + //
+						"    c.id as curso_id,\n" + //
+						"    c.nome as curso_nome from Aluno a join Curso c ON a.curso_id = c.id where 1=1";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		ResultSet rs = stmt.executeQuery();
 		List<Aluno> alunos = new ArrayList<Aluno>();
-		Aluno aluno = null;
 
 		while (rs.next()) {
-			aluno = new Aluno();
-			
-			aluno.setId(rs.getInt("id"));
-			aluno.setNome(rs.getString("nome"));
+			Aluno aluno = new Aluno();
+			aluno.setId(rs.getInt("aluno_id"));
+			aluno.setNome(rs.getString("aluno_nome"));
+			aluno.setDataIngresso(rs.getDate("data_ingresso").toLocalDate());
 
-			java.sql.Date sqlDate = rs.getDate("data_ingresso");
-			aluno.setDataIngresso(sqlDate.toLocalDate());
-			
-			aluno.getCurso().setId(rs.getInt("curso_id"));
+			Curso curso = new Curso();
+			curso.setId(rs.getInt("curso_id"));
+			curso.setNome(rs.getString("curso_nome"));
+
+			aluno.setCurso(curso);
 
 			alunos.add(aluno);
 		}
+
 		stmt.close();
 		con.close();
 		return alunos;
+	}
+
+	
+	public List<Aluno> listarComFiltros(String filtroNome, String filtroIdCurso) throws SQLException {
+		List<Aluno> lista = new ArrayList<>();
+		
+		StringBuilder sql = new StringBuilder(
+			"SELECT a.id as aluno_id, a.nome as aluno_nome, a.data_ingresso, " +
+			"c.id as curso_id, c.nome as curso_nome " +
+			"FROM Aluno a JOIN Curso c ON a.curso_id = c.id WHERE 1=1 "
+		);
+
+		if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+			sql.append(" AND a.nome LIKE ? ");
+		}
+
+		if (filtroIdCurso != null && !filtroIdCurso.trim().isEmpty()) {
+			sql.append(" AND c.id = ? ");
+		}
+
+		PreparedStatement stmt = con.prepareStatement(sql.toString());
+		
+		int paramIndex = 1;
+
+		if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+			stmt.setString(paramIndex++, "%" + filtroNome + "%");
+		}
+		if (filtroIdCurso != null && !filtroIdCurso.trim().isEmpty()) {
+			stmt.setInt(paramIndex++, Integer.parseInt(filtroIdCurso));
+		}
+		
+		ResultSet rs = stmt.executeQuery();
+		
+
+		while(rs.next()){
+			Aluno aluno = new Aluno();
+			aluno.setId(rs.getInt("aluno_id"));
+			aluno.setNome(rs.getString("aluno_nome"));
+			aluno.setDataIngresso(rs.getDate("data_ingresso").toLocalDate());
+
+			Curso curso = new Curso();
+			curso.setId(rs.getInt("curso_id"));
+			curso.setNome(rs.getString("curso_nome"));
+
+			aluno.setCurso(curso);
+
+			lista.add(aluno);
+		}
+		
+		rs.close();
+		stmt.close();
+		return lista;
 	}
 
 	

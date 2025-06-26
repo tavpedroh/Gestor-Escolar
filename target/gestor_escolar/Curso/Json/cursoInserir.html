@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Inserir Curso - JSON</title>
+</head>
+<body>
+    <h1>Gestor Escolar - Inserir Curso</h1><br><br>
+    <form id="cursoForm">
+        Nome: <input type="text" id="nome"><br><br>
+        Duração em Semestres: <input type="number" id="duracaoSemestres"><br><br>
+        <button type="submit">Enviar</button>
+    </form><br>
+
+    <p id="mensagem"></p><br><br>
+
+    <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
+
+    <script>
+        document.getElementById("cursoForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const curso = {
+                nome: document.getElementById("nome").value,
+                duracaoSemestres: parseInt(document.getElementById("duracaoSemestres").value)
+            };
+
+            const resposta = await fetch("/gestor_escolar/cursos-json", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(curso)
+            });
+
+            const texto = await resposta.text();
+            document.getElementById("mensagem").textContent = texto;
+        });
+    </script>
+</body>
+</html>

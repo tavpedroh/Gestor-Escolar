@@ -11,15 +11,15 @@
 <body>
     <h1>Gestor Escolar - Cadastrar Aluno</h1>
     <hr>
-    <form action="/gestor_escolar/alunos" method="post">
+    <form action="${pageContext.request.contextPath}/alunos" method="post">
         
         Nome: <input type="text" name="nome">
         <br><br>
         Data Ingresso: <input type="date" name="data_ingresso">
         <br><br>
-        Curso:  <select name="idCurso">
+        Curso:  <select name="idCurso" >
                     <option value="">Selecione um curso</option>
-                    <c:forEach var="cur" items="${cursos}">
+                    <c:forEach var="cur" items="${cursosParaOSelect}">
                         <option value="${cur.id}"> ${cur.nome} </option>
                     </c:forEach>
                 </select> 

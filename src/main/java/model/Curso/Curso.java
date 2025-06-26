@@ -4,7 +4,7 @@ public class Curso {
 
     private int id;
     private String nome;
-    private int duracaoSemetre;
+    private int duracaoSemestres;
 
     public Curso() {
     }
@@ -26,11 +26,11 @@ public class Curso {
         this.nome = nome;
     }
 
-    public int getDuracaoSemetre() {
-        return duracaoSemetre;
+    public int getDuracaoSemestres() {
+        return duracaoSemestres;
     }
-    public void setDuracaoSemetre(int duracaoSemetre) {
-        this.duracaoSemetre = duracaoSemetre;
+    public void setDuracaoSemestres(int duracaoSemestres) {
+        this.duracaoSemestres = duracaoSemestres;
     }
     
 }
