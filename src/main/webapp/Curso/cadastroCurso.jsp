@@ -11,11 +11,11 @@
 <body>
     <h1>Gestor Escolar - Cadastrar Curso</h1>
     <hr>
-    <form action="/gestor_escolar/cursos" method="post">
+    <form action="${pageContext.request.contextPath}/cursos" method="post">
 
         Nome: <input type="text" name="nome">
         <br><br>
-        Duracao em Semetres: <input type="text" name="duracao_semetres">
+        Duracao em Semetres: <input type="text" name="duracao_semestres">
         <br><br>
         <input type="hidden" name="_method" value="POST">
         <input type="submit" value="Cadastrar">

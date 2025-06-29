@@ -38,7 +38,7 @@ public class FiltroAutenticacao implements Filter {
         boolean acessoLivre =
             uri.endsWith("index.jsp") ||
             uri.endsWith("/login") ||
-            uri.endsWith("/Usuario/cadastroUsuario.jsp") ||
+            uri.endsWith("/Usuario/cadastroUsuario.html") ||
             (uri.endsWith("/usuario") && metodo.equalsIgnoreCase("POST"));
 
         if (logado || acessoLivre) {

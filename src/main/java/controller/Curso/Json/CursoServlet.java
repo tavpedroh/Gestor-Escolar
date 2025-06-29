@@ -44,7 +44,7 @@ public class CursoServlet extends HttpServlet {
         try {
             curDao.inserir(curso);
             response.setContentType("text/plain");
-        response.getWriter().write("Curso inserido com sucesso!");
+            response.getWriter().write("Curso inserido com sucesso!");
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro ao inserir curso.");

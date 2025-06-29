@@ -10,7 +10,7 @@
 <body>
     <h1>Gestor Escolar - Cadastrar Disciplina</h1>
     <hr>
-    <form action="/gestor_escolar/disciplinas" method="post">
+    <form action="${pageContext.request.contextPath}/disciplinas" method="post">
 
         Nome: <input type="text" name="nome">
         <br><br>
@@ -18,15 +18,17 @@
         <br><br>
         Curso:  <select name="idCurso">
                     <option value="">Selecione um curso</option>
-                    <c:forEach var="cur" items="${cursos}">
+                    <c:forEach var="cur" items="${cursosParaOSelect}">
                         <option value="${cur.id}"> ${cur.nome} </option>
                     </c:forEach>
                 </select> 
         <br><br>
+        
+        <input type="hidden" name="_method" value="POST">
         <input type="submit" value="Cadastrar">
     </form>
     <p>
-        <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
+        <a href="${pageContext.request.contextPath}/menu.jsp">Voltar para o menu.</a>
     </p>
 </body>
 </html>

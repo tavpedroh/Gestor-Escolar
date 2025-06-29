@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Aluno</title>
-    
 </head>
 <body>
     <h1>Gestor Escolar - Cadastrar Aluno</h1>
@@ -28,8 +27,7 @@
         <input type="hidden" name="_method" value="POST">
         <input type="submit" value="Cadastrar">
     </form>
-    <p>
-        <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
-    </p>
+    <br><br>
+    <p><a href="${pageContext.request.contextPath}/menu.jsp">Voltar para o menu.</a></p>
 </body>
 </html>

@@ -21,7 +21,7 @@ public class ServletCurso extends HttpServlet {
         String method = request.getParameter("_method");
 		
 		if (method == null || method.isEmpty()) {
-        method = request.getMethod();
+            method = request.getMethod();
     	}
 
         switch (method) {
@@ -43,60 +43,82 @@ public class ServletCurso extends HttpServlet {
     }
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String query = request.getParameter("q");
-		String next = request.getParameter("next");
-		CursoDao curDao = new CursoDao();
-		List<Curso> cursos = null;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String acao = request.getParameter("acao");
+        if (acao == null) {
+            acao = "listar"; // Ação padrão
+        }
 
-		try {
-			cursos = curDao.listar(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		request.setAttribute("cursos", cursos);
-		RequestDispatcher rd = request.getRequestDispatcher(next);
-		rd.forward(request, response);
-	}
-
-    @Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		String nome = request.getParameter("nome");
-		int duracao_semestres = Integer.parseInt(request.getParameter("duracao_semetres"));
-
-		Curso curso = new Curso();
-		curso.setNome(nome);
-		curso.setDuracaoSemestres(duracao_semestres);
-
-		CursoDao curDao = new CursoDao();
-
-		try {
-			curDao.inserir(curso);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        try {
+            switch (acao) {
+                case "exibirFormularioCadastro":
+                    exibirFormulario(request, response);
+                    break;
+                case "listar":
+                default:
+                    listarCursos(request, response);
+                    break;
+            }
+        } catch (SQLException e) {
+            throw new ServletException("Erro de banco de dados no GET", e);
+        }
     }
 
-	@Override
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idStr = request.getParameter("id");
-        String next = request.getParameter("next");
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String nome = request.getParameter("nome");
+        int duracao_semestres = Integer.parseInt(request.getParameter("duracao_semestres"));
 
-		if (idStr != null && !idStr.isEmpty()) {
-            int id = Integer.parseInt(idStr);
-			CursoDao curDao = new CursoDao();
+        Curso curso = new Curso();
+        curso.setNome(nome);
+        curso.setDuracaoSemestres(duracao_semestres);
 
-			try {
-				curDao.excluir(id);
-				response.sendRedirect(next);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do curso não fornecido.");
-		}
-	}
+        CursoDao curDao = new CursoDao();
+        try {
+            curDao.inserir(curso);
+            
+            response.sendRedirect(request.getContextPath() + "/cursos?acao=listar&sucesso=true");
+        } catch (SQLException e) {
+            throw new ServletException("Erro ao inserir curso.", e);
+        }
+    }
+    
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            CursoDao curDao = new CursoDao();
+            curDao.excluir(id);
+            
+            response.sendRedirect(request.getContextPath() + "/cursos?acao=listar&excluido=true");
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do curso inválido.");
+        } catch (SQLException e) {
+            throw new ServletException("Erro ao excluir curso.", e);
+        }
+    }
+
+    // --- MÉTODOS PARA ORGANIZAR O CÓDIGO ---
+
+    private void listarCursos(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        String filtroNome = request.getParameter("q");
+
+        CursoDao curDao = new CursoDao();
+        List<Curso> cursos = curDao.listarComFiltros(filtroNome); 
+
+        request.setAttribute("listaDeCursos", cursos);
+        
+        RequestDispatcher rd = request.getRequestDispatcher("Curso/relatorioCurso.jsp");
+        rd.forward(request, response);
+    }
+    
+    private void exibirFormulario(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+      
+        RequestDispatcher rd = request.getRequestDispatcher("Curso/cadastroCurso.jsp");
+        rd.forward(request, response);
+    }
+
+	
 }

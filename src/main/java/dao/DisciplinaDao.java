@@ -137,6 +137,57 @@ public class DisciplinaDao {
 	}
 
 
+	public List<Disciplina> listarComFiltros(String filtroNome, String filtroIdCurso) throws SQLException {
+		List<Disciplina> lista = new ArrayList<>();
+		
+		StringBuilder sql = new StringBuilder(
+			" SELECT d.id as disciplina_id, d.nome as disciplina_nome, d.carga_horaria as carga_horaria, c.id as curso_id, c.nome as curso_nome " +
+			"FROM Disciplina d JOIN Curso c ON d.curso_id = c.id WHERE 1=1 "
+		);
+
+		if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+			sql.append(" AND d.nome LIKE ? ");
+		}
+
+		if (filtroIdCurso != null && !filtroIdCurso.trim().isEmpty()) {
+			sql.append(" AND c.id = ? ");
+		}
+
+		PreparedStatement stmt = con.prepareStatement(sql.toString());
+		
+		int paramIndex = 1;
+
+		if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+			stmt.setString(paramIndex++, "%" + filtroNome + "%");
+		}
+		if (filtroIdCurso != null && !filtroIdCurso.trim().isEmpty()) {
+			stmt.setInt(paramIndex++, Integer.parseInt(filtroIdCurso));
+		}
+		
+		ResultSet rs = stmt.executeQuery();
+		
+
+		while(rs.next()){
+			Disciplina disciplina = new Disciplina();
+			disciplina.setId(rs.getInt("disciplina_id"));
+			disciplina.setNome(rs.getString("disciplina_nome"));
+			disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+
+			Curso curso = new Curso();
+			curso.setId(rs.getInt("curso_id"));
+			curso.setNome(rs.getString("curso_nome"));
+
+			disciplina.setCurso(curso);
+
+			lista.add(disciplina);
+		}
+		
+		rs.close();
+		stmt.close();
+		return lista;
+	}
+
+
 	public List<RelatorioDisciplinaDTO> relatorioDisciplina(Integer cursoId, String query) throws SQLException {
 		List<RelatorioDisciplinaDTO> lista = new ArrayList<>();
 		

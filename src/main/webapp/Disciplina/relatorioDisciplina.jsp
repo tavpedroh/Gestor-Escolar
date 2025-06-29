@@ -11,16 +11,17 @@
 <body>
     <h1>Gestor Escolar - Relatorio Disciplina</h1>
     <hr>
-    <form action="/gestor_escolar/relatorioDisciplinas" method="get">
+    <form action="${pageContext.request.contextPath}/disciplinas" method="get">
+        <input type="hidden" name="acao" value="listar">
 
         Nome:
-        <input type="text" name="q">
+        <input type="text" name="q" value="${param.q}">
         <br><br>
 
         Curso: 
         <select name="idCurso">
             <option value=""> Todos </option>
-            <c:forEach var="cur" items="${cursos}">
+            <c:forEach var="cur" items="${cursosParaOSelect}">
                 <option value="${cur.id}" ${param.idCurso == cur.id.toString() ? 'selected' : ''}>
                      ${cur.nome}
                 </option>
@@ -28,49 +29,52 @@
         </select>
         <br><br>
 
-        <input type="hidden" name="next" value="cursos?next=Disciplina/relatorioDisciplina.jsp"><br>
         <input type="hidden" name="_method" value="GET">
         <input type="submit" value="Gerar Relatório">
     </form>
 
 
-    <br>
-    <h2>Relatório de Disciplinas</h2>
-    <br>
-    <table border="1">
-        <tr>
-            <th>Disciplina</th>
-            <th>Curso</th>
-            <!-- <th>Editar</th> -->
-            <th>Excluir</th>
-        </tr>
-        <c:forEach var="rel" items="${relatorioD}">
-            <tr>
-                <td>${rel.nomeDisciplina}</td>
-                <td>${rel.nomeCurso}</td>
-                <!-- <td>
-                    <form action="/gestor_escolar/disciplinas" method="post">
-                        <input type="hidden" name="next" value="Disciplina/relatorioDisciplina.jsp">
-                        <input type="hidden" name="_method" value="PUT">
-                        <input type="hidden" name="id" value="${rel.idDisciplina}">
-                        <input type="hidden" name="q" value="${param.q}">
-                        <input type="submit" value="Editar">
-                    </form>
-                </td> -->
-                <td>
-                    <form action="/gestor_escolar/disciplinas" method="post">
-                        <input type="hidden" name="next" value="Disciplina/relatorioDisciplina.jsp">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="id" value="${rel.idDisciplina}">
-                        <input type="hidden" name="q" value="${param.q}">
-                        <input type="submit" value="Excluir">
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
-    </table>
-    <p>
-        <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
-    </p>
+    <c:if test="${param.q != null}">
+        <br>
+        <hr>
+        <h2>Resultados</h2>
+        <hr>
+        <br>
+        <c:if test="${not empty listaDeDisciplinas}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Curso</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="disciplina" items="${listaDeDisciplinas}">
+                        <tr>
+                            <td>${disciplina.nome}</td>
+                            <td>${disciplina.curso.nome}</td>
+                            <td>
+                                <form action="${pageContext.request.contextPath}/disciplinas" method="post" onsubmit="return confirm('Tem certeza que deseja excluir esta disciplina?');">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="id" value="${disciplina.id}">
+                                    <input type="hidden" name="q" value="${param.q}">
+                                    <input type="hidden" name="idCurso" value="${param.idCurso}">
+                                    <input type="submit" value="Excluir">
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </c:if>
+        <c:if test="${empty listaDeDisciplinas}">
+            <p style="text-align: center; font-weight: bold; margin-top: 20px;">
+                Nenhum disciplina encontrado com os filtros aplicados.
+            </p>
+        </c:if>
+    </c:if>
+    <br><br>
+    <p><a href="${pageContext.request.contextPath}/menu.jsp">Voltar para o menu.</a></p>
 </body>
 </html>

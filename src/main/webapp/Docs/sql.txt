@@ -5,7 +5,7 @@ USE dbgestorescolar;
 CREATE TABLE Curso(
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(50) NOT NULL,
-    duracao_semetres INT
+    duracao_semestres INT
 );
 
 CREATE TABLE Aluno(

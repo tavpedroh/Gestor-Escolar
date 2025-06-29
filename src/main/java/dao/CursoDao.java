@@ -19,7 +19,7 @@ public class CursoDao {
 
     public void inserir(Curso curso) throws SQLException {
 
-		String sql = " insert into Curso(nome, duracao_semestres) values(?,?) ";
+		String sql = " insert into Curso (nome, duracao_semestres) values (?, ?) ";
 
 		PreparedStatement stmt = con.prepareStatement(sql);
 
@@ -131,6 +131,42 @@ public class CursoDao {
 		con.close();
 		return cursos;
 	}
+
+	public List<Curso> listarComFiltros(String filtroNome) throws SQLException {
+		List<Curso> lista = new ArrayList<>();
+		
+		StringBuilder sql = new StringBuilder(
+			" SELECT id, nome, duracao_semestres FROM Curso WHERE 1=1 " 
+		);
+
+		if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+			sql.append(" AND nome LIKE ? ");
+		}
+
+		PreparedStatement stmt = con.prepareStatement(sql.toString());
+		
+		int paramIndex = 1;
+
+		if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+			stmt.setString(paramIndex++, "%" + filtroNome + "%");
+		}
+		
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()){
+			Curso curso = new Curso();
+			curso.setId(rs.getInt("id"));
+			curso.setNome(rs.getString("nome"));
+			curso.setDuracaoSemestres(rs.getInt("duracao_semestres"));
+
+			lista.add(curso);
+		}
+		
+		rs.close();
+		stmt.close();
+		return lista;
+	}
+
 
 	public List<RelatorioCursoDTO> relatorioCurso(String query) throws SQLException {
 		List<RelatorioCursoDTO> lista = new ArrayList<>();

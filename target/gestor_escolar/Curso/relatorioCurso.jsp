@@ -10,60 +10,60 @@
     
 </head>
 <body>
-    <h1>Gestor Escolar - Relatorio Curso</h1>
+    <h1>Gestor Escolar - Relatório de Cursos</h1>
     <hr>
-    <form action="/gestor_escolar/relatorioCursos" method="get">
-        
-        Nome:
-        <input type="text" name="q">
-        
-        <br><br>   
 
-        <input type="hidden" name="next" value="Curso/relatorioCurso.jsp"><br>
-        <input type="hidden" name="_method" value="GET">
+    <form action="${pageContext.request.contextPath}/cursos" method="get">
+        <input type="hidden" name="acao" value="listar">
+
+        Nome:
+        <input type="text" name="q" value="${param.q}">   
+
+        <br><br>
         <input type="submit" value="Gerar Relatório">
     </form>
-    <br>
-    <h2>Relatório de Cursos</h2>
-    <br>
-    <table border="1">
-        <tr>
-            <th>Curso</th>
-            <th>Quantidade de Alunos</th>
-            <th>Quantidade de Disciplinas</th>
-            <!-- <th>Editar</th> -->
-            <th>Excluir</th>
-        </tr>
-        <c:forEach var="rel" items="${relatorioC}">
-            <tr>
-                <td>${rel.nomeCurso}</td>
-                <td>${rel.quantidadeAluno}</td>
-                <td>${rel.quantidadeDisciplina}</td>
+    <c:if test="${param.q != null}">
+        <br>
+        <hr>
+        <h2>Resultados</h2>
+        <hr>
+        <br>
+        <c:if test="${not empty listaDeCursos}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Curso</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="curso" items="${listaDeCursos}">
+                        <tr>
+                            <td>${curso.nome}</td>
+                            <td>${curso.nome}</td>
+                            <td>
+                                <form action="${pageContext.request.contextPath}/cursos" method="post" onsubmit="return confirm('Tem certeza que deseja excluir este curso?');">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="id" value="${curso.id}">
+                                    <input type="hidden" name="q" value="${param.q}">
+                                    <input type="submit" value="Excluir">
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </c:if>
+        <c:if test="${empty listaDeCursos}">
+            <p style="text-align: center; font-weight: bold; margin-top: 20px;">
+                Nenhum curso encontrado com os filtros aplicados.
+            </p>
+        </c:if>
+    </c:if>
+    <br><br>
+    <p><a href="${pageContext.request.contextPath}/menu.jsp">Voltar para o menu.</a></p>
 
-                <!-- <td>
-                    <form action="/gestor_escolar/cursos" method="post">
-                        <input type="hidden" name="next" value="Curso/relatorioCurso.jsp">
-                        <input type="hidden" name="_method" value="PUT">
-                        <input type="hidden" name="id" value="${rel.idCurso}">
-                        <input type="hidden" name="q" value="${param.q}">
-                        <input type="submit" value="Editar">
-                    </form>
-                </td> -->
-                <td>
-                    <form action="/gestor_escolar/cursos" method="post">
-                        <input type="hidden" name="next" value="Curso/relatorioCurso.jsp">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="id" value="${rel.idCurso}">
-                        <input type="hidden" name="q" value="${param.q}">
-                        <input type="submit" value="Excluir">
-                    </form>
-                </td>
-            </tr>
-        </c:forEach>
-    </table>
-    <p>
-        <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
-    </p>
 </body>
 
 </html>
