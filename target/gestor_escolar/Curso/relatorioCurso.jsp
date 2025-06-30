@@ -7,29 +7,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatorio Curso</title>
-    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css">
+    <style>
+        :root {
+            --cor-fundo-app: ${corFundo};
+            --cor-fonte-app: ${corFonte};
+        }
+    </style>
 </head>
-<body>
-    <h1>Gestor Escolar - Relatório de Cursos</h1>
-    <hr>
 
-    <form action="${pageContext.request.contextPath}/cursos" method="get">
-        <input type="hidden" name="acao" value="listar">
+<c:set var="corFundo" value="#FFFFFF" />
+<c:set var="corFonte" value="#333333" />
 
-        Nome:
-        <input type="text" name="q" value="${param.q}">   
+<c:if test="${not empty cookie.corFundo}">
+    <c:set var="corFundo" value="${cookie.corFundo.value}" />
+</c:if>
+<c:if test="${not empty cookie.corFonte}">
+    <c:set var="corFonte" value="${cookie.corFonte.value}" />
+</c:if>
 
-        <br><br>
-        <input type="submit" value="Gerar Relatório">
-    </form>
+<body style="--cor-fundo-app: ${corFundo}; --cor-fonte-app: ${corFonte};">
+    <header>
+        <h1>Gestor Escolar - Relatório de Cursos</h1>
+    </header>
+    <main>
+        <form action="${pageContext.request.contextPath}/cursos" method="get">
+            Nome: <input type="text" name="q" value="${param.q}">
+            <input type="hidden" name="acao" value="listar">   
+            <input type="submit" value="Gerar Relatório">
+        </form>
+    
     <c:if test="${param.q != null}">
-        <br>
-        <hr>
         <h2>Resultados</h2>
-        <hr>
-        <br>
         <c:if test="${not empty listaDeCursos}">
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>Curso</th>
@@ -61,9 +72,8 @@
             </p>
         </c:if>
     </c:if>
-    <br><br>
-    <p><a href="${pageContext.request.contextPath}/menu.jsp">Voltar para o menu.</a></p>
-
+    <a href="${pageContext.request.contextPath}/Menu/menu.jsp">Voltar para o menu.</a>
+    </main>
 </body>
 
 </html>

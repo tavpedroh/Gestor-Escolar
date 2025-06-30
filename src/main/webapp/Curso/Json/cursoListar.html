@@ -3,27 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Listar Cursos - JSON</title>
+    <style>
+        body.hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+    <script src="../../js/tema.js" defer ></script>
+    <link rel="stylesheet" href="../../css/estilo.css">
 </head>
-<body>
-    <h1>Gestor Escolar - Listar Curso</h1><br><br>
-    <form id="filtroForm">
-        Nome: <input type="text" id="filtroNome" placeholder="Digite o nome do curso"><br>
-        <button type="submit">Buscar</button>
-    </form><br><br>
+<body class="hidden">
+    <header>
+        <h1>Gestor Escolar - Listar Curso</h1>
+    </header>
+    <main>
+        <form id="filtroForm">
+            Nome: <input type="text" id="filtroNome" placeholder="Digite o nome do curso">
+            <button type="submit">Buscar</button>
+        </form>
+        
+        <table border="1" id="tabelaCursos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Duração</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
-    <table border="1" id="tabelaCursos">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Duração</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table><br><br>
-    
-    <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
-
+        <a href="/gestor_escolar/Menu/menu.jsp">Voltar para o menu.</a>
+    </main>
     <script>
         document.getElementById("filtroForm").addEventListener("submit", async function(event) {
             event.preventDefault();

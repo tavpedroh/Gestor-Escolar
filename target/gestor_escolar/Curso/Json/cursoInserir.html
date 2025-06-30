@@ -3,19 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Inserir Curso - JSON</title>
+    <style>
+        body.hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+    <script src="../../js/tema.js" defer ></script>
+    <link rel="stylesheet" href="../../css/estilo.css">
 </head>
-<body>
-    <h1>Gestor Escolar - Inserir Curso</h1><br><br>
-    <form id="cursoForm">
-        Nome: <input type="text" id="nome"><br><br>
-        Duração em Semestres: <input type="number" id="duracaoSemestres"><br><br>
-        <button type="submit">Enviar</button>
-    </form><br>
+<body class="hidden">
+    <header>
+        <h1>Gestor Escolar - Inserir Curso</h1>
+    </header>
+    <main>
+        <form id="cursoForm">
+            Nome: <input type="text" id="nome" required>
+            Duração em Semestres: <input type="number" id="duracaoSemestres" required>
+            <button type="submit">Enviar</button>
+        </form>
 
-    <p id="mensagem"></p><br><br>
+        <p id="mensagem"></p>
 
-    <a href="/gestor_escolar/menu.jsp">Voltar para o menu.</a>
-
+        <a href="/gestor_escolar/Menu/menu.jsp">Voltar para o menu.</a>
+    </main>
     <script>
         document.getElementById("cursoForm").addEventListener("submit", async function(event) {
             event.preventDefault();

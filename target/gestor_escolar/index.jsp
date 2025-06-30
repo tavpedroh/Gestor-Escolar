@@ -5,16 +5,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css">
 </head>
 <body>
-    <h2>Gestor Escolar - Login</h2>
-    <form action="/gestor_escolar/login" method="post">
+    <header>
+        <h1>Gestor Escolar - Login</h1>
+    </header>
+    <main>
+        <form action="${pageContext.request.contextPath}/login" method="post">
 
-        <input type="text" placeholder="Login" name="login" required>
-        <input type="password" placeholder="Senha" name="senha" required>
-        
-        <button type="submit">Entrar</button>
-    </form>
-    <p> ${msg} </p>
+            <input type="text" placeholder="Login" name="login" required>
+            <input type="password" placeholder="Senha" name="senha" required>
+            
+            <button type="submit">Entrar</button>
+        </form>
+        <p> ${msg} </p>
+    </main>
 </body>
 </html>

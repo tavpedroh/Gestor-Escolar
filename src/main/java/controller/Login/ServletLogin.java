@@ -54,7 +54,7 @@ public class ServletLogin extends HttpServlet{
             HttpSession session = request.getSession();
             session.setAttribute("usuarioLogado", usuario);
 
-            response.sendRedirect(request.getContextPath() + "/menu.jsp");
+            response.sendRedirect(request.getContextPath() + "/Menu/menu.jsp");
         } else {
             response.sendRedirect("index.jsp?erro=1");
         }
