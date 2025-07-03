@@ -43,7 +43,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Curso</th>
+                        <th>ID</th>
                         <th>Curso</th>
                         <th>Excluir</th>
                     </tr>
@@ -51,7 +51,7 @@
                 <tbody>
                     <c:forEach var="curso" items="${listaDeCursos}">
                         <tr>
-                            <td>${curso.nome}</td>
+                            <td>${curso.id}</td>
                             <td>${curso.nome}</td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/cursos" method="post" onsubmit="return confirm('Tem certeza que deseja excluir este curso?');">

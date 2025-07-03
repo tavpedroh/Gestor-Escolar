@@ -9,8 +9,10 @@
             opacity: 0;
         }
     </style>
-    <script src="../../js/tema.js" defer ></script>
     <link rel="stylesheet" href="../../css/estilo.css">
+
+    <script src="../../js/tema.js" defer ></script>
+    <script src="../../js/cursoListar.js" defer></script>
 </head>
 <body class="hidden">
     <header>
@@ -28,35 +30,15 @@
                     <th>ID</th>
                     <th>Nome</th>
                     <th>Duração</th>
+                    <th>Excluir</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+                
+            </tbody>
         </table>
 
         <a href="/gestor_escolar/Menu/menu.jsp">Voltar para o menu.</a>
     </main>
-    <script>
-        document.getElementById("filtroForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-
-            const nome = document.getElementById("filtroNome").value;
-            const url = nome ? `/gestor_escolar/cursos-json?q=${encodeURIComponent(nome)}` : "/gestor_escolar/cursos-json";
-
-            const resposta = await fetch(url);
-            const cursos = await resposta.json();
-
-            const tbody = document.querySelector("#tabelaCursos tbody");
-            tbody.innerHTML = "";
-
-            cursos.forEach(curso => {
-                const row = `<tr>
-                    <td>${curso.id}</td>
-                    <td>${curso.nome}</td>
-                    <td>${curso.duracaoSemestres}</td>
-                </tr>`;
-                tbody.innerHTML += row;
-            });
-        });
-    </script>
 </body>
 </html>
