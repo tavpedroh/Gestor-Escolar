@@ -45,6 +45,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Curso</th>
+                        <th>Duracao</th>
                         <th>Excluir</th>
                     </tr>
                 </thead>
@@ -53,6 +54,7 @@
                         <tr>
                             <td>${curso.id}</td>
                             <td>${curso.nome}</td>
+                            <td>${curso.duracaoSemestres}</td>
                             <td>
                                 <form action="${pageContext.request.contextPath}/cursos" method="post" onsubmit="return confirm('Tem certeza que deseja excluir este curso?');">
                                     <input type="hidden" name="_method" value="DELETE">
