@@ -43,5 +43,11 @@ public class Disciplina {
         this.curso = curso;
     }
 
-
+    public double descontoCargaHoraria(int percentual){
+        if (percentual <= 0 || percentual > 100) {
+            return 0;
+        } else {
+            return this.cargaHoraria - this.cargaHoraria * (percentual / 100.0);
+        }
+    }
 }   

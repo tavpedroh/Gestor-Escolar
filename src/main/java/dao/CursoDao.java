@@ -91,7 +91,7 @@ public class CursoDao {
 		return cursos;
 	}
 
-	public Curso listar(int id) throws SQLException {
+	public Curso listarUm(int id) throws SQLException {
 		String sql = " select id, nome, duracao_semestres from Curso where id = ? ";
 
 		PreparedStatement stmt = con.prepareStatement(sql);
@@ -207,4 +207,27 @@ public class CursoDao {
 		return lista;
 	}
 
+
+	//Test
+
+	public int inserir2(Curso curso) throws SQLException {
+		String sql = " insert into Curso (nome, duracao_semestres) values (?, ?) ";
+
+		PreparedStatement stmt = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+
+		stmt.setString(1, curso.getNome());
+		stmt.setInt(2, curso.getDuracaoSemestres());
+
+		stmt.execute();
+		
+		ResultSet rs = stmt.getGeneratedKeys();
+		int idGerado = -1;
+		if (rs.next()) {
+			idGerado = rs.getInt(1);
+		}
+		stmt.close();
+		con.close();
+		
+		return idGerado;
+	}
 }

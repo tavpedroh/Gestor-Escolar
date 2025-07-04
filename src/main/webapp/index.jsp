@@ -19,7 +19,7 @@
             
             <button type="submit">Entrar</button>
         </form>
-        <p> ${msg} </p>
+        <a href="${pageContext.request.contextPath}/Usuario/cadastroUsuario.jsp">Não possui cadastro?</a>
     </main>
 </body>
 </html>

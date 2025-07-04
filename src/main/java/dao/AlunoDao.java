@@ -145,7 +145,7 @@ public class AlunoDao {
 			java.sql.Date sqlDate = rs.getDate("data_ingresso");
 			aluno.setDataIngresso(sqlDate.toLocalDate());
 			
-			aluno.setCurso(curDao.listar(rs.getInt("curso_id")));
+			aluno.setCurso(curDao.listarUm(rs.getInt("curso_id")));
 		}
 		stmt.close();
 		con.close();
